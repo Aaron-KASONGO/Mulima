@@ -1,14 +1,15 @@
 <!DOCTYPE html>
+{% load crispy_forms_tags %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" integrity="undefined" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="undefined" crossorigin="anonymous"></script>
 </head>
 <body>
-<form method="POST" action="{% url 'register' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enregistrer</button>
-</form>
+<div>
+    {% crispy form %}
+</div>
 </body>
 </html>
