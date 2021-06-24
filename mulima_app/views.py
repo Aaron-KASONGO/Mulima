@@ -6,11 +6,13 @@ from .forms import PersonForm, LoginForm
 def home(request):
     logged_user = get_logged_user_from_request(request)
     if logged_user:
-        if 'newMessage' in request.GET and request.GET['newMessage'] != '':
-            newMessage = Message(author=logged_user, content=request.GET['newMessage'])
+        print(request.POST)
+        if 'new_message' in request.POST and request.POST['new_message'] != '':
+            newMessage = Message(author=logged_user, content=request.POST['new_message'])
             newMessage.save()
-        friendMessages = Message.objects.filter(author__friends=logged_user).order_by('-publication_date')
-        return render(request, 'mulima_app/home.html', {'logged_user': logged_user, 'friendMessages': friendMessages})
+        friendMessages = Message.objects.filter(author__friends=logged_user)
+        messages = Message.objects.all().order_by('publication_date')
+        return render(request, 'mulima_app/home.html', {'logged_user': logged_user, 'friendMessages': friendMessages, 'all_messages': messages})
     else:
         return redirect('login')
 
@@ -21,7 +23,6 @@ def login(request):
         if form.is_valid():
             user_username = form.cleaned_data['username']
             logged_user = Person.objects.get(username=user_username)
-            logged_user.friends.add(logged_user)
             request.session['logged_user_id'] = logged_user.id
             return redirect('home')
         else:
@@ -36,7 +37,11 @@ def register(request):
         personForm = PersonForm(request.POST)
         if personForm.is_valid():
             personForm.save()
-            return redirect('login')
+            logged_user = Person.objects.get(username=personForm.cleaned_data.get('username'))
+            request.session['logged_user_id'] = logged_user.id
+            return redirect('home')
+        else:
+            return render(request, 'mulima_app/register.html', {'form': personForm})
         # Le formulaire envoyé n'est pas valide
     personForm = PersonForm()
     return render(request, 'mulima_app/register.html', {'form': personForm})
