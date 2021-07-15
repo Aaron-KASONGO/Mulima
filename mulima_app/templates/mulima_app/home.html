@@ -3,69 +3,179 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="{% static 'assets/css_nav/Navigation-with-Search.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css_nav/styles.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css_chat/Bootstrap-Chat.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css_chat/styles.css' %}">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 {% endblock %}
 
 {% block content %}
-<div class="page-content page-container" id="page-content">
-    <div class="padding">
-        <div class="row container d-flex justify-content-center">
-            <div class="col-md-6">
-                <div class="card card-bordered">
-                    <div class="card-header">
-                        <h4 class="card-title"><strong>Chat</strong></h4> <a class="btn btn-xs btn-secondary" href="#"
-                                                                             data-abc="true">Let's Chat App</a>
+<nav class="navbar navbar-light navbar-expand-md fixed-top bg-dark navigation-clean-search row">
+    <div class="container"><a class="navbar-brand text-white-50" href="#">{{ logged_user.username }}</a>
+        <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1"><span
+                class="visually-hidden">Toggle navigation</span><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navcol-1">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link active" href="#">Link 1</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Link 2</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Link 3</a></li>
+            </ul>
+            <form class="me-auto search-form" target="_self">
+                <div class="d-flex align-items-center"><label class="form-label d-flex mb-0" for="search-field"><i
+                        class="fa fa-search"></i></label><input class="form-control search-field" type="search"
+                                                                id="search-field" name="search"></div>
+            </form>
+            <a class="btn btn-dark action-button" role="button" href="#">Action </a>
+        </div>
+    </div>
+</nav>
+<div class="row">
+    <div class="container-fluid">
+        <!-- For demo purpose-->
+        <header class="text-center">
+            <h1 class="display-4 text-white">Bootstrap Chat</h1>
+        </header>
+
+        <div class="row rounded-lg overflow-hidden shadow">
+            <!-- Users box-->
+            <div class="col-5 px-0">
+                <div class="bg-dark">
+
+                    <div class="bg-gray px-4 py-2 bg-light">
+                        <p class="h5 mb-0 py-1">Amis</p>
                     </div>
-                    <div class="ps-container ps-theme-default ps-active-y" id="chat-content"
-                         style="overflow-y: scroll !important; height:400px !important;">
-                        {% for message in all_messages %}
-                            {% if message in friendMessages %}
-                            <div class="media media-chat"><img class="avatar"
-                                                               src="https://img.icons8.com/color/36/000000/administrator-male.png"
-                                                               alt="...">
-                                <div class="media-body">
-                                    <p>{{ message.content }}</p>
-                                    <p class="meta">
-                                        <time datetime="2018">{{ message.publication_date.year }}</time>
-                                    </p>
+
+                    <div class="messages-box">
+                        <div class="list-group rounded-0">
+                            {% for friend in logged_user.profile.friends.all %}
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-dark rounded-0">
+                                <div class="media"><img
+                                        src="https://res.cloudinary.com/mhmd/image/upload/v1564960395/avatar_usae7z.svg"
+                                        alt="user" width="50" class="rounded-circle">
+                                    <div class="media-body ml-4">
+                                        <div class="d-flex align-items-center justify-content-between mb-1">
+                                            <h6 class="mb-0">{{ logged_user.username }}</h6><small
+                                                class="small font-weight-bold">14
+                                            Dec</small>
+                                        </div>
+                                        <p class="font-italic text-muted mb-0 text-small">Lorem ipsum dolor sit amet,
+                                            consectetur. incididunt ut labore.</p>
+                                    </div>
                                 </div>
-                            </div>
-                            {% elif message.author == logged_user %}
-                        <!--<div class="media media-meta-day">Today</div>-->
-                            <div class="media media-chat media-chat-reverse">
-                                <div class="media-body">
-                                    <p>{{ message.content }}</p>
-                                    <p class="meta">
-                                        <time datetime="2018">{{ message.publication_date.year }}</time>
-                                    </p>
-                                </div>
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                        <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 0px;">
-                            <div class="ps-scrollbar-x" tabindex="0" style="left: 0px; width: 0px;"></div>
+                            </a>
+                            {% endfor %}
                         </div>
-                        <div class="ps-scrollbar-y-rail" style="top: 0px; height: 0px; right: 2px;">
-                            <div class="ps-scrollbar-y" tabindex="0" style="top: 0px; height: 2px;"></div>
-                        </div>
-                    </div>
-                    <div class="publisher bt-1 border-light">
-                        <form action="{% url 'home' %}" method="post">
-                            {% csrf_token %}
-                            <img class="avatar avatar-xs"
-                                 src="https://img.icons8.com/color/36/000000/administrator-male.png"
-                                 alt="...">
-                            <input class="publisher-input" name="new_message" type="text" placeholder="Write something">
-                            <span class="publisher-btn file-group"> <i class="fa fa-paperclip file-browser"></i>
-                            <input type="file"> </span> <a class="publisher-btn" href="#" data-abc="true"><i
-                                class="fa fa-smile"></i></a> <a class="publisher-btn text-info" href="#"
-                                                                data-abc="true"><i
-                                class="fa fa-paper-plane"></i></a>
-                            <input type="submit">
-                        </form>
                     </div>
                 </div>
+            </div>
+            <!-- Chat Box-->
+            <div class="col-7 px-0" id="m-div">
+                <div class="px-4 py-5 chat-box bg-dark" id="ma-div">
+                    {% for message in all_messages %}
+                    {% if message.author.profile in logged_user.profile.friends.all %}
+                    <!-- Sender Message-->
+                    <div class="media w-50 mb-3"><img
+                            src="https://res.cloudinary.com/mhmd/image/upload/v1564960395/avatar_usae7z.svg" alt="user"
+                            width="50" class="rounded-circle">
+                        <div class="media-body ml-3">
+                            <div class="bg-white rounded py-2 mb-2">
+                                <p class="text-small mb-0 text-black">{{ message.content }}</p>
+                            </div>
+                            <p class="small text-muted">12:00 PM | Aug 13</p>
+                        </div>
+                    </div>
+                    {% elif message in logged_user.message_set.all %}
+                    <!-- Reciever Message-->
+                    <div class="media w-50 ml-auto mb-3 row">
+                        <div class="media-body">
+                            <div class="bg-primary rounded py-2 mb-2">
+                                <p class="text-small mb-0 text-white">{{ message.content }}</p>
+                            </div>
+                            <p class="small text-muted">12:00 PM | Aug 13</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% empty %}
+                    <h3>Rien à afficher</h3>
+                    {% endfor %}
+
+                </div>
+                <!-- Typing area -->
+                <form class="bg-light" id="myform">
+                    {% csrf_token %}
+                    <div class="input-group">
+                        <input id="id_content" type="text" name="new_message" placeholder="Type a message"
+                               aria-describedby="button-addon2"
+                               class="form-control rounded-0 border-0 py-4 bg-light">
+                        <div class="input-group-append" id="div-button">
+                            <button id="button-addon2" class="btn btn-link"><i
+                                    class="fa fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(function () {
+        $('#ma-div').animate({scrollTo:1000000}, 800)
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        // catch the form's submit event
+        $('#button-addon2').click(function () {
+            $('#myform').submit(function (e) {
+                e.preventDefault();
+                // create an AJAX call
+                console.log($('#ma-div').height())
+                $.ajaxSetup({
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                });
+                $.ajax({
+                    type: "POST",
+                    data: $(this).serialize(), // get the form data
+                    url: "{% url 'chat' %}",
+                    // on success
+                    success: function (response) {
+                        if (response.texte) {
+                            $('#id_content').val("");
+                            $(`<div class="media w-50 ml-auto mb-3 row">
+                        <div class="media-body">
+                            <div class="bg-primary rounded py-2 mb-2">
+                                <p class="text-small mb-0 text-white">${response.texte}</p>
+                            </div>
+                            <p class="small text-muted">12:00 PM | Aug 13</p>
+                        </div>
+                    </div>`).appendTo('#ma-div');
+                            $('#ma-div').scrollTop($('#ma-div').scrollHeight);
+                        }
+
+                        /*if (response.is_taken === true) {
+                            $('#id_username').removeClass('is-valid').addClass('is-invalid');
+                            if ($('#error_1_id_username')) {
+                                $('#error_1_id_username').remove()
+                                $('#id_username').after('<span id="error_1_id_username" class="invalid-feedback"><strong>Ce nom d\'utilisateur existe déjà.</strong></span>')
+                            } else {
+                                $('#id_username').after('<span id="error_1_id_username" class="invalid-feedback"><strong>Ce nom d\'utilisateur existe déjà.</strong></span>')
+                            }
+                        } else {
+                            $('#id_username').removeClass('is-invalid').addClass('is-valid');
+                            $('#error_1_id_username').remove();
+
+                        }*/
+
+                    },
+                });
+            })
+
+        });
+    })
+</script>
 {% endblock %}

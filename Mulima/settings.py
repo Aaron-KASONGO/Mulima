@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mulima_app',
+    'mulima_app.apps.MulimaAppConfig',
     'crispy_forms',
 ]
 

@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Untitled</title>
+    <link rel="stylesheet" href="{% static 'assets/friend_static/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/friend_static/fonts/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/friend_static/css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/friend_static/css/Team-Boxed.css' %}">
+</head>
+
+<body>
+    <section class="team-boxed">
+        <div class="container">
+            <div class="intro">
+                <h2 class="text-center">Team </h2>
+                <p class="text-center">Nunc luctus in metus eget fringilla. Aliquam sed justo ligula. Vestibulum nibh erat, pellentesque ut laoreet vitae.</p>
+            </div>
+            <div class="row people">
+                {% for user in users %}
+                {% if user.profile not in logged_user.profile.friends.all %}
+                <div class="col-md-6 col-lg-4 item">
+                    <div class="box"><img class="rounded-circle" src="{% static 'assets/friend_static/img/1.jpg' %}">
+                        <h3 class="name">{{ user.username }}</h3>
+                        <p class="title">Musician</p>
+                        <p class="description">Aenean tortor est, vulputate quis leo in, vehicula rhoncus lacus. Praesent aliquam in tellus eu gravida. Aliquam varius finibus est, et interdum justo suscipit id. Etiam dictum feugiat tellus, a semper massa. </p>
+                        <div><a class="btn btn-primary" type="button" href="{% url 'add_friends' user.id %}">Lier</a></div>
+                        <div class="social"><a href="#"><i class="fa fa-facebook-official"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-instagram"></i></a></div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="col-md-6 col-lg-4 item">
+                    <div class="box"><img class="rounded-circle" src="{% static 'assets/friend_static/img/2.jpg' %}">
+                        <h3 class="name">{{ user.username }}</h3>
+                        <p class="title">Artist</p>
+                        <p class="description">Aenean tortor est, vulputate quis leo in, vehicula rhoncus lacus. Praesent aliquam in tellus eu gravida. Aliquam varius finibus est, et interdum justo suscipit id. Etiam dictum feugiat tellus, a semper massa. </p>
+                        <div><a class="btn btn-secondary" type="button" href="{% url 'remove_friends' user.id %}">Délier</a></div>
+                        <div class="social"><a href="#"><i class="fa fa-facebook-official"></i></a><a href="#"><i class="fa fa-twitter"></i></a><a href="#"><i class="fa fa-instagram"></i></a></div>
+                    </div>
+                </div>
+                {% endif %}
+                {% empty %}
+                <h2>Personne ne s'est encore !!!</h2>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'assets/friend_static/bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>

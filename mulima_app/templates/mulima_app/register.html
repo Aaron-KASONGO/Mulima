@@ -4,21 +4,61 @@
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css" integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js" integrity="sha512-RCgrAvvoLpP7KVgTkTctrUdv7C6t7Un3p1iaoPr1++3pybCyCsCZZN7QEHMZTcJTmcJ7jzexTO+eFpHk4OCFAg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css"
+      integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/1.0.10/datepicker.min.js"
+        integrity="sha512-RCgrAvvoLpP7KVgTkTctrUdv7C6t7Un3p1iaoPr1++3pybCyCsCZZN7QEHMZTcJTmcJ7jzexTO+eFpHk4OCFAg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link rel="stylesheet" href="{% static 'assets/css/Registration-Form-with-Photo.css' %}">
+<link rel="stylesheet" href="{% static 'assets/css/styles.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="well">Registration Mulima</h1>
-    <div class="col-lg-12 well">
-        <div class="row">
-            {% crispy form %}
-        </div>
+<section class="register-photo">
+    <div class="form-container">
+        <div class="image-holder"></div>
+        {% crispy form %}
     </div>
-</div>
+</section>
 {% endblock %}
 {% block script %}
 <script src="{% static 'js/datetime.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        // catch the form's submit event
+        $('#id_username').keyup(function () {
+            // create an AJAX call
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            });
+            $.ajax({
+                type: "POST",
+                data: $(this).serialize(), // get the form data
+                url: "{% url 'validate_username' %}",
+                // on success
+                success: function (response) {
+                    if (response.is_taken === true) {
+                        $('#id_username').removeClass('is-valid').addClass('is-invalid');
+                        if ($('#error_1_id_username')) {
+                            $('#error_1_id_username').remove()
+                            $('#id_username').after('<span id="error_1_id_username" class="invalid-feedback"><strong>Ce nom d\'utilisateur existe déjà.</strong></span>')
+                        } else {
+                            $('#id_username').after('<span id="error_1_id_username" class="invalid-feedback"><strong>Ce nom d\'utilisateur existe déjà.</strong></span>')
+                        }
+                    } else {
+                        $('#id_username').removeClass('is-invalid').addClass('is-valid');
+                        $('#error_1_id_username').remove();
+
+                    }
+
+                },
+            });
+        });
+    })
+</script>
 {% endblock %}
