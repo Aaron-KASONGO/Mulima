@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.core import serializers
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import User, Message, Profile
 from .forms import PersonForm, LoginForm
@@ -7,22 +8,14 @@ from .forms import PersonForm, LoginForm
 def home(request):
     logged_user = get_logged_user_from_request(request)
     if logged_user:
-        """if 'new_message' in request.POST and request.POST['new_message'] != '':
+        if 'new_message' in request.POST and request.POST['new_message'] != '':
             newMessage = Message(author=logged_user, content=request.POST['new_message'])
-            newMessage.save()"""
+            newMessage.save()
         messages = Message.objects.all().order_by('publication_date')
         return render(request, 'mulima_app/home.html',
                       {'logged_user': logged_user, 'all_messages': messages})
     else:
         return redirect('login')
-
-
-def chat(request):
-    """Check username availability"""
-    response = {
-        'texte': request.POST["new_message"]
-    }
-    return JsonResponse(response)
 
 
 def validate_username(request):

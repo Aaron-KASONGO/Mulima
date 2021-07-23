@@ -4,6 +4,7 @@ from django import forms
 from django.contrib.auth.hashers import check_password
 from django.forms import ModelForm
 from django.contrib.auth.models import User
+from .models import Post
 
 
 class LoginForm(forms.Form):
@@ -62,17 +63,7 @@ class PersonForm(ModelForm):
             Fieldset('<stong>Créer</strong> un compte', Row('username', css_class="mb-3"), Row('email', css_class="mb-3"), Row('password', css_class="mb-3"))
         )
 
-
-"""class AddFriendForm(forms.Form):
-    email = forms.EmailField(label='Courriel')
-
-    def clean(self):
-        cleaned_data = super(AddFriendForm, self).clean()
-        email = cleaned_data.get("email")
-
-        #Verify the field is valid
-        if email:
-            result = Person.objects.filter(email=email)
-            if len(result) != 1:
-                raise forms.ValidationError("Adresse de courriel erronée.")
-        return cleaned_data"""
+class PostForm(ModelForm):
+    class Meta:
+        model = Post
+        fields = ('content','img')
